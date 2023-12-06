@@ -7,7 +7,7 @@ version: '3'
 
 services:
   octoprint:
-    image: octoprint/octoprint:1.8.7
+    image: octoprint/octoprint:1.9.1
     restart: unless-stopped
     ports:
       - 80:80
