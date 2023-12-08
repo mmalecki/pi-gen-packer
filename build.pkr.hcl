@@ -55,6 +55,11 @@ build {
   }
 
   provisioner "shell" {
+    only = ["arm-image.rapiscope"]
+    script = "scripts/install-rapiscope.sh"
+  }
+
+  provisioner "shell" {
     only = ["arm-image.media"]
     script = "scripts/install-media.sh"
   }
@@ -93,6 +98,19 @@ build {
       hostname = "infra"
       cmds : [
         local.etc_hosts,
+      ]
+    })
+  }
+
+  provisioner "file" {
+    only = ["arm-image.rapiscope"]
+
+    destination = "/etc/cloud/cloud.cfg.d/rapiscope.cfg"
+    content = templatefile("templates/cloud-init-common.tmpl", {
+      hostname = "rapiscope"
+      cmds : [
+        local.etc_hosts,
+        local.hotplug_network_interfaces,
       ]
     })
   }
