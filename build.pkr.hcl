@@ -5,11 +5,13 @@ locals {
   ]
 
   etc_hosts = "sed -i \"s/raspberrypi/$(hostname)/\" /etc/hosts"
+  hotplug_network_interfaces = "systemctl mask systemd-networkd-wait-online.service"
 
   server_builds = [
-    "source.arm-image.prusa_i3",
-    "source.arm-image.home",
-    "source.arm-image.infra",
+    "arm-image.prusa_i3",
+    "arm-image.home",
+    "arm-image.infra",
+    "arm-image.rapiscope",
   ]
 
   desktop_builds = [
