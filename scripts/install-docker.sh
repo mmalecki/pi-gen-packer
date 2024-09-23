@@ -19,7 +19,12 @@ mkdir -p /etc/docker
 tee /etc/docker/daemon.json <<EOF
 {
   "ipv6": true,
-  "fixed-cidr-v6": "2001:db8:1::/64"
+  "fixed-cidr-v6": "2001:db8:1::/64",
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-file": "10",
+    "max-size": "64m"
+  }
 }
 EOF
 
