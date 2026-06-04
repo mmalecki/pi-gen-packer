@@ -36,6 +36,7 @@ images: $(BASE_IMG_FILENAME) $(BASE_IMG_FILENAME).sha256
 	-var source_iso_checksum=$$($(CUT) -d' ' -f1 < $(BASE_IMG_FILENAME).sha256) \
 	-var output_directory=$(PI_GEN_DEPLOY_DIR) \
 	-var operator_user_name=$(FIRST_USER_NAME) \
+	-var-file secrets.pkrvars.hcl \
 	.
 
 clean:
