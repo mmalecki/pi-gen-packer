@@ -14,3 +14,13 @@ variable "operator_user_name" {
 variable "output_directory" {
   default = "../deploy"
 }
+
+variable "wifi_ssid" {
+  description = "WiFi SSID"
+  default = ""
+}
+
+variable "wifi_pass" {
+  description = "WiFi pass"
+  default = ""
+}

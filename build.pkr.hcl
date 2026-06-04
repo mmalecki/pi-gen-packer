@@ -6,6 +6,7 @@ locals {
 
   etc_hosts = "sed -i \"s/raspberrypi/$(hostname)/\" /etc/hosts"
   hotplug_network_interfaces = "systemctl mask systemd-networkd-wait-online.service"
+  block_wifi = "rfkill block wifi"
 
   server_builds = [
     "arm-image.prusa_i3",
@@ -26,6 +27,14 @@ build {
 
   provisioner "shell" {
     script = "scripts/common.sh"
+  }
+
+  provisioner "shell" {
+    script = "scripts/wifi.sh"
+    environment_vars = [
+      "WIFI_SSID=${var.wifi_ssid}",
+      "WIFI_PASS=${var.wifi_pass}"
+    ]
   }
 
   provisioner "shell" {
@@ -85,7 +94,9 @@ build {
       hostname = "home"
       cmds : [
         local.etc_hosts,
-        "cd /srv/docker/home-assistant && docker compose up -d",
+        # local.block_wifi,
+        local.hotplug_network_interfaces,
+        "cd /srv/home-assistant && docker compose up -d",
       ]
     })
   }
@@ -98,6 +109,7 @@ build {
       hostname = "infra"
       cmds : [
         local.etc_hosts,
+        local.block_wifi,
       ]
     })
   }
@@ -130,10 +142,5 @@ build {
   provisioner "shell" {
     only = local.server_builds
     script = "scripts/systemd-post.sh"
-  }
-
-  provisioner "shell" {
-    only = ["arm-image.infra", "arm-image.home"]
-    script = "scripts/wired-post.sh"
   }
 }
