@@ -9,7 +9,6 @@ locals {
   block_wifi = "rfkill block wifi"
 
   server_builds = [
-    "arm-image.prusa_i3",
     "arm-image.home",
     "arm-image.infra",
     "arm-image.rapiscope",
@@ -52,12 +51,6 @@ build {
   }
 
   provisioner "shell" {
-    only = ["arm-image.prusa_i3"]
-    script = "scripts/install-octoprint.sh"
-    environment_vars = local.op
-  }
-
-  provisioner "shell" {
     only = ["arm-image.home"]
     script = "scripts/install-home-assistant.sh"
     environment_vars = local.op
@@ -71,19 +64,6 @@ build {
   provisioner "shell" {
     only = ["arm-image.media"]
     script = "scripts/install-media.sh"
-  }
-
-  provisioner "file" {
-    only = ["arm-image.prusa_i3"]
-
-    destination = "/etc/cloud/cloud.cfg.d/prusa-i3.cfg"
-    content = templatefile("templates/cloud-init-common.tmpl", {
-      hostname = "prusa-i3"
-      cmds : [
-        local.etc_hosts,
-        "cd /srv/docker/octoprint && docker compose up -d",
-      ]
-    })
   }
 
   provisioner "file" {
